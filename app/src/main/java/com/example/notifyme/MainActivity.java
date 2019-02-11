@@ -7,6 +7,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,11 +58,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void cancelNotification() {
-    }
 
-    private void updateNotification() {
-    }
 
     public void createNotificationChannel(){
         // Create a notification manager object.
@@ -122,4 +120,32 @@ public class MainActivity extends AppCompatActivity {
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
         return notifyBuilder;
     };
+
+    /**
+     * OnClick method for the "Update Me!" button. Updates the existing
+     * notification to show a picture.
+     */
+    private void updateNotification() {
+        // Load the drawable resource into the a bitmap image.
+        Bitmap androidImage = BitmapFactory.decodeResource(getResources(),R.drawable.mascot_1);
+        // Build the notification with all of the parameters using helper
+        // method.
+        NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
+
+        // Update the notification style to BigPictureStyle.
+        notifyBuilder.setStyle( new NotificationCompat.BigPictureStyle()
+        .bigPicture(androidImage)
+        .setBigContentTitle("Notification Updated!"));
+
+        // Deliver the notification.
+        mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
+
+    }
+
+    /**
+     * OnClick method for the "Cancel Me!" button. Cancels the notification.
+     */
+    private void cancelNotification() {
+        mNotifyManager.cancel(NOTIFICATION_ID);
+    }
 }
