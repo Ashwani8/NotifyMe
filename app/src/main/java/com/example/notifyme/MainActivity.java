@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 .setAutoCancel(true) // closes the notification when user tap on it
                 .setContentIntent(notificationPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setPriority(NotificationCompat.DEFAULT_ALL);
+                .setDefaults(NotificationCompat.DEFAULT_ALL);
         return notifyBuilder;
     };
 }
