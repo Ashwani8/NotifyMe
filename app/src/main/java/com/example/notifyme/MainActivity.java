@@ -5,6 +5,8 @@ import androidx.core.app.NotificationCompat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,11 +36,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createNotificationChannel(){
+        // Create a notification manager object.
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
+        // Notification channels are only available in OREO and higher.
+        // So, add a check on SDK version.
         if(android.os.Build.VERSION.SDK_INT >=
                 android.os.Build.VERSION_CODES.O){
-            // Create a Notification Channel
+            // Create a Notification Channel with all the parameters
             NotificationChannel notificationChannel = new NotificationChannel(PRIMARY_CHANNEL_ID,
                     "Mascot Notification", NotificationManager.IMPORTANCE_HIGH);
             notificationChannel.enableLights(true);
@@ -49,20 +54,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // sends notification to user
+    /**
+     * OnClick method for the "Notify Me!" button.
+     * Creates and delivers a simple notification.
+     */
     public void sendNotification(){
+        // Build the notification with all of the parameters using helper
+        // method.
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
+
+        // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
 
     }
-    // helper method to buld notification
+
+    /**
+     * Helper method that builds the notification.
+     *
+     * @return NotificationCompat.Builder: notification build with all the
+     * parameters.
+     */
 
     private NotificationCompat.Builder getNotificationBuilder(){
+        // Set up the pending intent that is delivered when the notification
+        // is clicked.
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent notificationPendingIntent = PendingIntent.getActivity(this,
+                NOTIFICATION_ID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Build the notification with all of the parameters.
         NotificationCompat.Builder notifyBuilder = new
                 NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("You have been notified!")
                 .setContentText("This is your notification text.")
-                .setSmallIcon(R.drawable.ic_android);
+                .setSmallIcon(R.drawable.ic_android)
+                // added after creating above pending intent
+                .setAutoCancel(true) // closes the notification when user tap on it
+                .setContentIntent(notificationPendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.DEFAULT_ALL);
         return notifyBuilder;
     };
 }
