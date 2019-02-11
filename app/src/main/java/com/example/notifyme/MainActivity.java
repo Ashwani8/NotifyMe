@@ -1,6 +1,7 @@
 package com.example.notifyme;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
     private NotificationManager mNotifyManager;
+    private static final int NOTIFICATION_ID = 0;
+
     private Button button_notify;
 
     @Override
@@ -27,7 +30,20 @@ public class MainActivity extends AppCompatActivity {
                 sendNotification();
             }
         });
+        createNotificationChannel();
     }
+
+    // helper method to buld notification
+
+    private NotificationCompat.Builder getNotificationBuilder(){
+        NotificationCompat.Builder notifyBuilder = new
+                NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+                .setContentTitle("You have been notified!")
+                .setContentText("This is your notification text.")
+                .setSmallIcon(R.drawable.ic_android);
+        return notifyBuilder;
+    };
+
     public void createNotificationChannel(){
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
