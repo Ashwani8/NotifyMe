@@ -33,17 +33,6 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
     }
 
-    // helper method to buld notification
-
-    private NotificationCompat.Builder getNotificationBuilder(){
-        NotificationCompat.Builder notifyBuilder = new
-                NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                .setContentTitle("You have been notified!")
-                .setContentText("This is your notification text.")
-                .setSmallIcon(R.drawable.ic_android);
-        return notifyBuilder;
-    };
-
     public void createNotificationChannel(){
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -62,6 +51,18 @@ public class MainActivity extends AppCompatActivity {
 
     // sends notification to user
     public void sendNotification(){
+        NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
+        mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
 
     }
+    // helper method to buld notification
+
+    private NotificationCompat.Builder getNotificationBuilder(){
+        NotificationCompat.Builder notifyBuilder = new
+                NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+                .setContentTitle("You have been notified!")
+                .setContentText("This is your notification text.")
+                .setSmallIcon(R.drawable.ic_android);
+        return notifyBuilder;
+    };
 }
