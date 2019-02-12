@@ -102,9 +102,19 @@ public class MainActivity extends AppCompatActivity {
      * Creates and delivers a simple notification.
      */
     public void sendNotification(){
+        // Set up the pending intent that is delivered when the notification
+        // is clicked.
+        Intent updateIntent = new Intent(ACTION_UPDATE_NOTIFICATION);
+        PendingIntent updatePendingIntent = PendingIntent.getBroadcast(this,
+                NOTIFICATION_ID, updateIntent, PendingIntent.FLAG_ONE_SHOT);
+
         // Build the notification with all of the parameters using helper
         // method.
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
+
+        // Add the action button using the pending intent.
+        notifyBuilder.addAction(R.drawable.ic_update,
+                getString(R.string.update), updatePendingIntent);
 
         // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
@@ -146,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
      * notification to show a picture.
      */
     private void updateNotification() {
+
+
         // Load the drawable resource into the a bitmap image.
         Bitmap androidImage = BitmapFactory.decodeResource(getResources(),R.drawable.mascot_1);
         // Build the notification with all of the parameters using helper
