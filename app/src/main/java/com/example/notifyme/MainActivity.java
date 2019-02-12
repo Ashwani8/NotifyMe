@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
 
+        // Enable the update and cancel buttons but disables the "Notify Me!" button.
+       setNotificationButtonState(false, true,true);
     }
 
     /**
@@ -140,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
         // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
 
+        // Disable the update button, leaving only the cancel button enabled.
+        setNotificationButtonState(false, false,true);
     }
 
     /**
@@ -147,5 +151,24 @@ public class MainActivity extends AppCompatActivity {
      */
     private void cancelNotification() {
         mNotifyManager.cancel(NOTIFICATION_ID);
+
+        // Reset the buttons.
+        setNotificationButtonState(true, false,false);
+    }
+
+    /**
+     * Helper method to enable/disable the buttons.
+     *
+     * @param isNotifyEnabled, boolean: true if notify button enabled
+     * @param isUpdateEnabled, boolean: true if update button enabled
+     * @param isCancelEnabled, boolean: true if cancel button enabled
+     */
+    void setNotificationButtonState(Boolean isNotifyEnabled,
+                                    Boolean isUpdateEnabled,
+                                    Boolean isCancelEnabled) {
+
+        button_notify.setEnabled(isNotifyEnabled);
+        button_update.setEnabled(isUpdateEnabled);
+        button_cancel.setEnabled(isCancelEnabled);
     }
 }
