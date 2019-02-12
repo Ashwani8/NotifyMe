@@ -6,7 +6,10 @@ import androidx.core.app.NotificationCompat;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -21,15 +24,30 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManager mNotifyManager;
     private static final int NOTIFICATION_ID = 0;
 
+    // Constants for the notification actions buttons.
+    private static final String ACTION_UPDATE_NOTIFICATION =
+            "com.example.notifyme.ACTION_UPDATE_NOTIFICATION";
+    private NotificationReceiver mReceiver = new NotificationReceiver();
+
     private Button button_notify;
     private Button button_cancel;
     private Button button_update;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Create the notification channel
+        createNotificationChannel();
+
+        // Register the broadcast receiver to receive the update action from
+        // the notification.
+        registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
+
+        // Add onClick handlers to all the buttons.
         button_notify = (Button) findViewById(R.id.notify);
         button_notify.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,4 +189,33 @@ public class MainActivity extends AppCompatActivity {
         button_update.setEnabled(isUpdateEnabled);
         button_cancel.setEnabled(isCancelEnabled);
     }
+
+    /**
+     * The broadcast receiver class for notifications.
+     * Responds to the update notification pending intent action.
+     */
+    public class NotificationReceiver extends BroadcastReceiver{
+        public NotificationReceiver() {
+        }
+
+        /**
+         * Receives the incoming broadcasts and responds accordingly.
+         *
+         * @param context Context of the app when the broadcast is received.
+         * @param intent The broadcast intent containing the action.
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Update the notification.
+            updateNotification();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        unregisterReceiver(mReceiver);
+        super.onDestroy();
+    }
+
 }
